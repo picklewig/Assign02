@@ -91,9 +91,8 @@ IntSet::IntSet(int initial_capacity): used(0), capacity(DEFAULT_CAPACITY){
 IntSet::IntSet(const IntSet& src): data(src.data), capacity(src.capacity), used(src.used){}
 
 
-IntSet::~IntSet()
-{
-   cout << "destructor is not implemented yet..." << endl;
+IntSet::~IntSet(){
+   delete[] data;
 }
 
 IntSet& IntSet::operator=(const IntSet& rhs)
@@ -135,8 +134,7 @@ bool IntSet::isSubsetOf(const IntSet& otherIntSet) const{
     return isSubset;
 }
 
-void IntSet::DumpData(ostream& out) const
-{  // already implemented ... DON'T change anything
+void IntSet::DumpData(ostream& out) const{  // already implemented ... DON'T change anything
    if (used > 0)
    {
       out << data[0];
@@ -145,16 +143,31 @@ void IntSet::DumpData(ostream& out) const
    }
 }
 
-IntSet IntSet::unionWith(const IntSet& otherIntSet) const
-{
-   cout << "unionWith() is not implemented yet..." << endl;
-   return IntSet(); // dummy IntSet object returned
+IntSet IntSet::unionWith(const IntSet& otherIntSet) const{
+    IntSet unionSet;
+    for(int index{0}; index < used; index++){
+        unionSet.add(data[index]);
+    }
+    for(int index{0}; index < otherIntSet.used; index++){
+        if(!contains(otherIntSet.data[index])){
+            unionSet.add(otherIntSet.data[index]);
+        }
+    }
+    return unionSet;
 }
 
 IntSet IntSet::intersect(const IntSet& otherIntSet) const
 {
-   cout << "intersect() is not implemented yet..." << endl;
-   return IntSet(); // dummy IntSet object returned
+    IntSet intersectSet;
+    for(int index{0}; index < used; index++){
+        intersectSet.add(data[index]);
+    }
+    for(int index{0}; index < used; index++){
+        if(!otherIntSet.contains(data[index])){
+            intersectSet.remove(data[index]);
+        }
+    }
+    return intersectSet;
 }
 
 IntSet IntSet::subtract(const IntSet& otherIntSet) const
@@ -170,7 +183,10 @@ void IntSet::reset(){
 bool IntSet::add(int anInt)
 {
     bool added = false;
-    if(!contains(anInt) and (size() < capacity)){
+    if(!contains(anInt)){
+        if(used == capacity){
+            resize(capacity+1);
+        }
         data[used] = anInt;
         used++;
         added = true;
