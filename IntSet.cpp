@@ -27,7 +27,7 @@
 //     beginning of the data array.
 // (6) We DON'T care what is stored in any of the array elements
 //     from data[used] through data[capacity - 1].
-//     Note: This applies also when the IntSet is empry (used == 0)
+//     Note: This applies also when the IntSet is empty (used == 0)
 //           in which case we DON'T care what is stored in any of
 //           the data array elements.
 //     Note: A distinct int value in the IntSet can be any of the
@@ -76,9 +76,12 @@
 #include <cassert>
 using namespace std;
 
-void IntSet::resize(int new_capacity)
-{
-   cout << "resize() is not implemented yet..." << endl;
+void IntSet::resize(int new_capacity){
+    int* newSet = new int[new_capacity];
+    int* temp = data;
+    data = newSet;
+    capacity = new_capacity;
+    delete[] temp;
 }
 
 IntSet::IntSet(int initial_capacity): used(0), capacity(DEFAULT_CAPACITY){
@@ -170,39 +173,52 @@ IntSet IntSet::intersect(const IntSet& otherIntSet) const
     return intersectSet;
 }
 
-IntSet IntSet::subtract(const IntSet& otherIntSet) const
-{
-   cout << "subtract() is not implemented yet..." << endl;
-   return IntSet(); // dummy IntSet object returned
+IntSet IntSet::subtract(const IntSet& otherIntSet) const{
+    IntSet differenceSet;
+    for(int index{0}; index < used; index++){
+        if(!otherIntSet.contains(data[index])){
+            differenceSet.add(data[index]);
+        }
+    }
+    return differenceSet;
 }
 
 void IntSet::reset(){
     used = 0;
 }
 
-bool IntSet::add(int anInt)
-{
+bool IntSet::add(int anInt){
     bool added = false;
     if(!contains(anInt)){
-        if(used == capacity){
+        if(used >= capacity){
             resize(capacity+1);
         }
-        data[used] = anInt;
+        data[used-1] = anInt;
         used++;
         added = true;
     }
-    assert(added);
+    //cout << "we are using " << used << endl;
+    //assert(added);
     return added;
 }
 
-bool IntSet::remove(int anInt)
-{
-   cout << "remove() is not implemented yet..." << endl;
-   return false; // dummy value returned
+bool IntSet::remove(int anInt){
+    bool removed = false;
+    for(int index{0}; index < used; index++){
+        if(data[index] == anInt){
+            int temp = index;
+            while(temp < used){
+                data[temp] = data[temp+1];
+                temp++;
+            }
+            used--;
+            removed = true;
+        }
+    }
+    return removed;
 }
 
-bool operator==(const IntSet& is1, const IntSet& is2)
-{
+bool operator==(const IntSet& is1, const IntSet& is2){
    cout << "operator==() is not implemented yet..." << endl;
    return false; // dummy value returned
 }
