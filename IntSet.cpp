@@ -81,15 +81,14 @@ void IntSet::resize(int new_capacity)
    cout << "resize() is not implemented yet..." << endl;
 }
 
-IntSet::IntSet(int initial_capacity)
-{
-   cout << "IntSet(...) is not implemented yet..." << endl;
+IntSet::IntSet(int initial_capacity): used(0), capacity(DEFAULT_CAPACITY){
+   if(initial_capacity >= 1){
+       capacity = initial_capacity;
+   }
+   data = new int[capacity];
 }
 
-IntSet::IntSet(const IntSet& src)
-{
-   cout << "copy constructor is not implemented yet..." << endl;
-}
+IntSet::IntSet(const IntSet& src): data(src.data), capacity(src.capacity), used(src.used){}
 
 
 IntSet::~IntSet()
@@ -103,28 +102,37 @@ IntSet& IntSet::operator=(const IntSet& rhs)
    return *this;
 }
 
-int IntSet::size() const
-{
-   cout << "size() is not implemented yet..." << endl;
-   return 0; // dummy value returned
+int IntSet::size() const{
+    return used;
 }
 
-bool IntSet::isEmpty() const
-{
-   cout << "isEmpty() is not implemented yet..." << endl;
-   return false; // dummy value returned
+bool IntSet::isEmpty() const{
+    return used == 0;
 }
 
-bool IntSet::contains(int anInt) const
-{
-   cout << "contains() is not implemented yet..." << endl;
-   return false; // dummy value returned
+bool IntSet::contains(int anInt) const{
+    bool isContained = false;
+    for(int index{0}; index < used; index++){
+        if(data[index] == anInt){
+            isContained = true;
+        }
+    }
+    return isContained;
 }
 
-bool IntSet::isSubsetOf(const IntSet& otherIntSet) const
-{
-   cout << "isSubsetOf() is not implemented yet..." << endl;
-   return false; // dummy value returned
+bool IntSet::isSubsetOf(const IntSet& otherIntSet) const{
+    bool isSubset = true;
+    if(used <= otherIntSet.used){
+        for(int index{0}; index < used; index++){
+            if(!otherIntSet.contains(data[index])){
+                isSubset = false;
+            }
+        }
+    }
+    if(isEmpty()){
+        isSubset = true;
+    }
+    return isSubset;
 }
 
 void IntSet::DumpData(ostream& out) const
@@ -155,15 +163,20 @@ IntSet IntSet::subtract(const IntSet& otherIntSet) const
    return IntSet(); // dummy IntSet object returned
 }
 
-void IntSet::reset()
-{
-   cout << "reset() is not implemented yet..." << endl;
+void IntSet::reset(){
+    used = 0;
 }
 
 bool IntSet::add(int anInt)
 {
-   cout << "add() is not implemented yet..." << endl;
-   return false; // dummy value returned
+    bool added = false;
+    if(!contains(anInt) and (size() < capacity)){
+        data[used] = anInt;
+        used++;
+        added = true;
+    }
+    assert(added);
+    return added;
 }
 
 bool IntSet::remove(int anInt)
