@@ -80,12 +80,11 @@ void IntSet::resize(int new_capacity){
     int* newSet = new int[new_capacity];
     for(int index{0}; index < capacity; index++){
         newSet[index] = data[index];
+        cout << endl << "moved " << data[index] << " to new array" << endl;
     }
-    cout << endl << "moved all values to a bigger array" << endl;
     delete[] data;
     data = newSet;
     capacity = new_capacity;
-    cout << endl << "leaving resize" << endl;
 }
 
 IntSet::IntSet(int initial_capacity): used(0), capacity(DEFAULT_CAPACITY){
@@ -102,10 +101,13 @@ IntSet::~IntSet(){
    delete[] data;
 }
 
-IntSet& IntSet::operator=(const IntSet& rhs)
-{
-   cout << "operator=() is not implemented yet..." << endl;
-   return *this;
+IntSet& IntSet::operator=(const IntSet& rhs){
+    if(this != &rhs){
+        data = rhs.data;
+        capacity = rhs.capacity;
+        used = rhs.used;
+    }
+    return *this;
 }
 
 int IntSet::size() const{
@@ -197,7 +199,7 @@ bool IntSet::add(int anInt){
         if(used >= capacity){
             resize(capacity+1);
         }
-        data[used-1] = anInt;
+        data[used] = anInt;
         used++;
         added = true;
     }
@@ -222,6 +224,14 @@ bool IntSet::remove(int anInt){
 }
 
 bool operator==(const IntSet& is1, const IntSet& is2){
-   cout << "operator==() is not implemented yet..." << endl;
-   return false; // dummy value returned
+    bool isEqual = true;
+    if(is1.size() == is2.size()){
+        if((is1.subtract(is2)).size() > 0){
+            isEqual = false;
+        }
+    }
+    else{
+        isEqual = false;
+    }
+    return isEqual;
 }
