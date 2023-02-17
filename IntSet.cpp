@@ -78,10 +78,14 @@ using namespace std;
 
 void IntSet::resize(int new_capacity){
     int* newSet = new int[new_capacity];
-    int* temp = data;
+    for(int index{0}; index < capacity; index++){
+        newSet[index] = data[index];
+    }
+    cout << endl << "moved all values to a bigger array" << endl;
+    delete[] data;
     data = newSet;
     capacity = new_capacity;
-    delete[] temp;
+    cout << endl << "leaving resize" << endl;
 }
 
 IntSet::IntSet(int initial_capacity): used(0), capacity(DEFAULT_CAPACITY){
@@ -197,7 +201,6 @@ bool IntSet::add(int anInt){
         used++;
         added = true;
     }
-    //cout << "we are using " << used << endl;
     //assert(added);
     return added;
 }
