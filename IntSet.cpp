@@ -77,8 +77,14 @@
 using namespace std;
 
 void IntSet::resize(int new_capacity){
+    if(new_capacity < used){
+        new_capacity = used;
+    }
+    if(new_capacity < 1){
+        new_capacity = 1;
+    }
     int* newSet = new int[new_capacity];
-    for(int index{0}; index < capacity; index++){
+    for(int index{0}; index < used; index++){
         newSet[index] = data[index];
         cout << endl << "moved " << data[index] << " to new array" << endl;
     }
@@ -92,9 +98,17 @@ IntSet::IntSet(int initial_capacity): used(0), capacity(DEFAULT_CAPACITY){
        capacity = initial_capacity;
    }
    data = new int[capacity];
+    for(int index{0}; index < capacity; index++){
+        data[index] = 0;
+    }
 }
 
-IntSet::IntSet(const IntSet& src): data(src.data), capacity(src.capacity), used(src.used){}
+IntSet::IntSet(const IntSet& src): capacity(src.capacity), used(src.used){
+    data = new int[capacity];
+    for (int index{0}; index < used; index++){
+        data[index] = src.data[index];
+    }
+}
 
 
 IntSet::~IntSet(){
@@ -103,7 +117,12 @@ IntSet::~IntSet(){
 
 IntSet& IntSet::operator=(const IntSet& rhs){
     if(this != &rhs){
-        data = rhs.data;
+        int* newData = new int[rhs.capacity];
+        for (int index{0}; index < used; index++){
+            newData[index] = rhs.data[index];
+        }
+        delete[] data;
+        data = newData;
         capacity = rhs.capacity;
         used = rhs.used;
     }
@@ -195,9 +214,9 @@ void IntSet::reset(){
 
 bool IntSet::add(int anInt){
     bool added = false;
-    if(!contains(anInt)){
+    if(!contains(anInt)){//if the set contains the value already don't add it
         if(used >= capacity){
-            resize(capacity+1);
+            resize(used+1);
         }
         data[used] = anInt;
         used++;
