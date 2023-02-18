@@ -86,7 +86,6 @@ void IntSet::resize(int new_capacity){
     int* newSet = new int[new_capacity];
     for(int index{0}; index < used; index++){
         newSet[index] = data[index];
-        cout << endl << "moved " << data[index] << " to new array" << endl;
     }
     delete[] data;
     data = newSet;

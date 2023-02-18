@@ -105,25 +105,24 @@
 
 #include <iostream>
 
-class IntSet
-{
+class IntSet{
 public:
-   static const int DEFAULT_CAPACITY = 1;
-   IntSet(int initial_capacity = DEFAULT_CAPACITY);
-   IntSet(const IntSet& src);
-   ~IntSet();
-   IntSet& operator=(const IntSet& rhs);
-   int size() const;
-   bool isEmpty() const;
-   bool contains(int anInt) const;
-   bool isSubsetOf(const IntSet& otherIntSet) const;
-   void DumpData(std::ostream& out) const;
-   IntSet unionWith(const IntSet& otherIntSet) const;
-   IntSet intersect(const IntSet& otherIntSet) const;
-   IntSet subtract(const IntSet& otherIntSet) const;
-   void reset();
-   bool add(int anInt);
-   bool remove(int anInt);
+   static const int DEFAULT_CAPACITY = 1;//
+   IntSet(int initial_capacity = DEFAULT_CAPACITY);//
+   IntSet(const IntSet& src);//
+   ~IntSet();//
+   IntSet& operator=(const IntSet& rhs);//
+   int size() const;//
+   bool isEmpty() const;//
+   bool contains(int anInt) const;//
+   bool isSubsetOf(const IntSet& otherIntSet) const;//
+   void DumpData(std::ostream& out) const;//
+   IntSet unionWith(const IntSet& otherIntSet) const;//
+   IntSet intersect(const IntSet& otherIntSet) const;//
+   IntSet subtract(const IntSet& otherIntSet) const;//
+   void reset();//
+   bool add(int anInt);//
+   bool remove(int anInt);//
 
 private:
    int* data;
