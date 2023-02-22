@@ -117,7 +117,7 @@ IntSet::~IntSet(){
 IntSet& IntSet::operator=(const IntSet& rhs){
     if(this != &rhs){
         int* newData = new int[rhs.capacity];
-        for (int index{0}; index < used; index++){
+        for (int index{0}; index < rhs.used; index++){
             newData[index] = rhs.data[index];
         }
         delete[] data;
@@ -154,6 +154,8 @@ bool IntSet::isSubsetOf(const IntSet& otherIntSet) const{
                 isSubset = false;
             }
         }
+    } else {
+        isSubset = false;
     }
     if(isEmpty()){
         isSubset = true;
@@ -212,10 +214,17 @@ void IntSet::reset(){
 }
 
 bool IntSet::add(int anInt){
+    /*
+     * "new capacity" is "roughly 1.5 * old capacity" and at least "old capacity + 1".
+    The latter (at least "old capacity + 1") is a simple way to take care of the subtle case
+     where "1.5*old capacity" evaluates (with truncation) to the same as "old capacity".
+    (TIP: "int(1.5*old capacity) + 1" is a formula you can use to rather painlessly
+     compute "new capacity" satisfying the above.)
+     */
     bool added = false;
     if(!contains(anInt)){//if the set contains the value already don't add it
         if(used >= capacity){
-            resize(used+1);
+            resize(int(1.5*capacity) + 1);
         }
         data[used] = anInt;
         used++;
