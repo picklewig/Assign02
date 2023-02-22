@@ -97,9 +97,6 @@ IntSet::IntSet(int initial_capacity): used(0), capacity(DEFAULT_CAPACITY){
        capacity = initial_capacity;
    }
    data = new int[capacity];
-    for(int index{0}; index < capacity; index++){
-        data[index] = 0;
-    }
 }
 
 IntSet::IntSet(const IntSet& src): capacity(src.capacity), used(src.used){
@@ -238,13 +235,12 @@ bool IntSet::remove(int anInt){
     bool removed = false;
     for(int index{0}; index < used; index++){
         if(data[index] == anInt){
-            int temp = index;
-            while(temp < used){
-                data[temp] = data[temp+1];
-                temp++;
+            for(int innerIndex = index + 1; innerIndex < used; innerIndex++){
+                data[innerIndex - 1] = data[innerIndex];
             }
             used--;
             removed = true;
+            break;
         }
     }
     return removed;
